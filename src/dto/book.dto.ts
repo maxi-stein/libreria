@@ -1,6 +1,6 @@
 export class CreateBookDto {
   readonly authors: string[];
-  readonly editorial: string;
+  readonly publisher: string;
   readonly title: string;
   readonly category: string;
   readonly price: number;

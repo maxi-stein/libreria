@@ -43,6 +43,11 @@ export class PublisherController {
     @Res() response: Response,
     @Body() createPublisherDto: CreatePublisherDto,
   ) {
+    if (!this.validateCuit(createPublisherDto.cuit)) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        error: 'CUIT is not valid.',
+      });
+    }
     const publisher =
       await this.publisherService.createPublisher(createPublisherDto);
     return response.status(HttpStatus.OK).json({
@@ -75,5 +80,10 @@ export class PublisherController {
       message: 'Publisher deleted successfuly',
       publisher,
     });
+  }
+
+  validateCuit(cuit: string): boolean {
+    const regex: RegExp = /^[1-9]{2}-\d{8}-\d{1}$/;
+    return regex.test(cuit);
   }
 }

@@ -1,8 +1,8 @@
 import { Schema } from 'mongoose';
 
 export const AuthorSchema = new Schema({
-  name: String,
-  surname: String,
-  dni: String,
-  nationality: String,
+  name: { type: String, required: true },
+  surname: { type: String, required: true },
+  dni: { type: String, required: true },
+  nationality: { type: String, required: true },
 });

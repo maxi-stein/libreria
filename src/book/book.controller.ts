@@ -23,7 +23,15 @@ export class BookController {
     @Res() response: Response,
     @Body() createBookDto: CreateBookDto,
   ) {
-    const book = await this.bookService.createBook(createBookDto);
+    let book;
+    try {
+      book = await this.bookService.createBook(createBookDto);
+    } catch (error) {
+      return response.status(HttpStatus.NOT_ACCEPTABLE).json({
+        error,
+      });
+    }
+
     return response.status(HttpStatus.OK).json({
       message: 'Book created succesfuly',
       book,
