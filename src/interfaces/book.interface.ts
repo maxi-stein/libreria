@@ -1,0 +1,11 @@
+import { Document } from "mongoose";
+
+export interface Book extends Document {
+  authors: string[];
+  editorial: string;
+  title: string;
+  category: string;
+  price: number;
+  releaseDate: Date;
+  description: string;
+}
