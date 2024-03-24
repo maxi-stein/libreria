@@ -34,8 +34,8 @@ export class BookService {
   }
 
   async createBook(createBookDto: CreateBookDto): Promise<Book> {
-    const book = new this.bookModel(createBookDto);
     await this.validateBook(createBookDto);
+    const book = new this.bookModel(createBookDto);
     await book.save();
     return book;
   }

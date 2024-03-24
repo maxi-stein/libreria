@@ -9,10 +9,12 @@ import {
   Body,
   Param,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateBookDto } from 'src/dto/book.dto';
 import { BookService } from './book.service';
 import { Response } from 'express';
+import * as moment from 'moment';
 
 @Controller('books')
 export class BookController {
@@ -23,19 +25,27 @@ export class BookController {
     @Res() response: Response,
     @Body() createBookDto: CreateBookDto,
   ) {
-    let book;
     try {
-      book = await this.bookService.createBook(createBookDto);
+      try {
+        createBookDto.releaseDate = this.getFormattedDate(
+          createBookDto.releaseDate,
+        );
+      } catch (error) {
+        return response.status(HttpStatus.BAD_REQUEST).json({
+          error,
+        });
+      }
+
+      const book = await this.bookService.createBook(createBookDto);
+      return response.status(HttpStatus.OK).json({
+        message: 'Book created succesfuly',
+        book,
+      });
     } catch (error) {
-      return response.status(HttpStatus.NOT_ACCEPTABLE).json({
+      return response.status(HttpStatus.BAD_REQUEST).json({
         error,
       });
     }
-
-    return response.status(HttpStatus.OK).json({
-      message: 'Book created succesfuly',
-      book,
-    });
   }
 
   @Get()
@@ -78,5 +88,25 @@ export class BookController {
       message: 'Book deleted successfuly',
       book,
     });
+  }
+
+  getFormattedDate(date: string) {
+    const twoDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{2}$/;
+    const fourDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{4}$/;
+
+    if (twoDigitYear.test(date)) {
+      const formattedDate = moment(date, 'DD/MM/YY');
+      console.log('luego del primer formateo: ', formattedDate);
+      return formattedDate.toISOString();
+    }
+    if (fourDigitYear.test(date)) {
+      const formattedDate = moment(date, 'DD/MM/YYYY');
+      console.log('luego del primer formateo: ', formattedDate);
+      return formattedDate.toISOString();
+    } else {
+      throw new BadRequestException(
+        'Invalid Date. Please use formats DD/MM/YYYY or DD/MM/YY or verify if the date is actually valid',
+      );
+    }
   }
 }

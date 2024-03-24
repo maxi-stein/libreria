@@ -4,6 +4,6 @@ export class CreateBookDto {
   readonly title: string;
   readonly category: string;
   readonly price: number;
-  readonly releaseDate: Date;
+  releaseDate: string;
   readonly description: string;
 }

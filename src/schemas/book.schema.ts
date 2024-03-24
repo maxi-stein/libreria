@@ -7,7 +7,7 @@ export const BookSchema = new Schema({
   category: { type: String, required: true },
   price: { type: Number, required: true },
   releaseDate: {
-    type: Date,
+    type: String,
     default: Date.now,
   },
   description: { type: String, required: true },

@@ -6,6 +6,6 @@ export interface Book extends Document {
   title: string;
   category: string;
   price: number;
-  releaseDate: Date;
+  releaseDate: string;
   description: string;
 }
