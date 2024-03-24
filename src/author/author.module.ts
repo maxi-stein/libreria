@@ -8,7 +8,8 @@ import { AuthorSchema } from 'src/schemas/author.schema';
   imports: [
     MongooseModule.forFeature([
       { name: 'Author', schema: AuthorSchema, collection: 'author' },
-  ])],
+    ]),
+  ],
   controllers: [AuthorController],
   providers: [AuthorService],
 })

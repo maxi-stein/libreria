@@ -25,7 +25,10 @@ export class AuthorService {
     return author;
   }
 
-  async updateAuthor(authorId: string, createAuthorDto: CreateAuthorDto): Promise<Author> {
+  async updateAuthor(
+    authorId: string,
+    createAuthorDto: CreateAuthorDto,
+  ): Promise<Author> {
     const author = await this.authorModel.findByIdAndUpdate(
       authorId,
       createAuthorDto,
