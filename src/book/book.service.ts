@@ -8,7 +8,7 @@ import { CreateBookDto } from 'src/dto/book.dto';
 @Injectable()
 export class BookService {
   //injecting schema Book defined at MongooseModule.forFeature()
-  constructor(@InjectModel('Book') private readonly bookModel: Model<Book>) {}
+  constructor(@InjectModel('Book') private readonly bookModel: Model<Book>) {} //Model<Book> the is the interface
 
   async getBooks(): Promise<Book[]> {
     const books = await this.bookModel.find();
@@ -17,6 +17,8 @@ export class BookService {
 
   async getBook(bookId: string): Promise<Book> {
     const book = await this.bookModel.findById(bookId);
+    await book.populate('authors');
+    await book.populate('publisher');
     return book;
   }
 

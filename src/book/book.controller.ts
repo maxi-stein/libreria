@@ -25,7 +25,7 @@ export class BookController {
   ) {
     const book = await this.bookService.createBook(createBookDto);
     return response.status(HttpStatus.OK).json({
-      message: 'created succesfuly',
+      message: 'Book created succesfuly',
       book,
     });
   }
