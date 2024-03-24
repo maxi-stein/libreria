@@ -1,14 +1,14 @@
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 export const BookSchema = new Schema({
-  authors: [{ type: String }],
-  editorial: String,
-  title: String,
-  category: String,
-  price: Number,
+  authors: [{ type: Types.ObjectId, ref: 'Author', required: true }],
+  publisher: { type: Types.ObjectId, ref: 'Publisher', required: true },
+  title: { type: String, required: true },
+  category: { type: String, required: true },
+  price: { type: Number, required: true },
   releaseDate: {
     type: Date,
     default: Date.now,
   },
-  description: String,
+  description: { type: String, required: true },
 });

@@ -42,6 +42,8 @@ export class BookController {
   async getBook(@Param('id') bookId, @Res() response: Response) {
     const book = await this.bookService.getBook(bookId);
     if (!book) throw new NotFoundException('Book does not exists.');
+    await book.populate('publisher'); //'publisher' is the name of the field
+    await book.populate('authors'); //'authors' is the name of the field
     response.status(HttpStatus.OK).json({
       book,
     });
