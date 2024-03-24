@@ -11,14 +11,18 @@ export class BookService {
   constructor(@InjectModel('Book') private readonly bookModel: Model<Book>) {} //Model<Book> the is the interface
 
   async getBooks(): Promise<Book[]> {
-    const books = await this.bookModel.find();
+    const books = await this.bookModel
+      .find()
+      .populate('publisher')
+      .populate('authors');
     return books;
   }
 
   async getBook(bookId: string): Promise<Book> {
-    const book = await this.bookModel.findById(bookId);
-    await book.populate('authors');
-    await book.populate('publisher');
+    const book = await this.bookModel
+      .findById(bookId)
+      .populate('publisher')
+      .populate('authors');
     return book;
   }
 
