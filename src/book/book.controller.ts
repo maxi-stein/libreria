@@ -12,7 +12,7 @@ import {
   BadRequestException,
   Query,
 } from '@nestjs/common';
-import { CreateBookDto } from 'src/dto/book.dto';
+import { CreateBookDto, GetBookDto } from 'src/dto/book.dto';
 import { BookService } from './book.service';
 import { Response } from 'express';
 import * as moment from 'moment';
@@ -52,7 +52,7 @@ export class BookController {
   }
 
   @Get()
-  async getBooks(@Res() response: Response, @Query() query: CreateBookDto) {
+  async getBooks(@Res() response: Response, @Query() query: GetBookDto) {
     let books;
     if (query.pagination === 'true') {
       //that comparison doesnt look good , i know.
