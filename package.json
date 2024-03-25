@@ -24,6 +24,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/mongoose": "^10.0.4",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.3.0",
     "date-fns": "^3.6.0",
     "moment": "^2.30.1",
     "mongoose": "^8.2.3",

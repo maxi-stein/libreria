@@ -6,4 +6,7 @@ export class CreateBookDto {
   readonly price: number;
   releaseDate: string;
   readonly description: string;
+  readonly pagination?: string;
+  readonly page?: number;
+  readonly pageSize?: number;
 }

@@ -10,6 +10,7 @@ import {
   Param,
   NotFoundException,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { CreateBookDto } from 'src/dto/book.dto';
 import { BookService } from './book.service';
@@ -49,11 +50,22 @@ export class BookController {
   }
 
   @Get()
-  async getBooks(@Res() response: Response) {
-    const books = await this.bookService.getBooks();
-    response.status(HttpStatus.OK).json({
-      books,
-    });
+  async getBooks(@Res() response: Response, @Query() query: CreateBookDto) {
+    let books;
+    if (query.pagination === 'true') {
+      //that comparison doesnt look good , i know.
+      const page = query.page || 1; //page 1 if no page specified
+      const pageSize = query.pageSize || 5; //page 5 if no page specified
+      books = await this.bookService.getbooksPage(page, pageSize);
+      response.status(HttpStatus.OK).json({
+        books,
+      });
+    } else {
+      books = await this.bookService.getBooks();
+      response.status(HttpStatus.OK).json({
+        books,
+      });
+    }
   }
 
   @Get('/:id')
@@ -90,7 +102,7 @@ export class BookController {
     });
   }
 
-  getFormattedDate(date: string) {
+  getFormattedDate(date: string): string {
     const twoDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{2}$/;
     const fourDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{4}$/;
 

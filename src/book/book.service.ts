@@ -81,4 +81,14 @@ export class BookService {
       throw new NotFoundException('Publisher not found.');
     }
   }
+  async getbooksPage(page: number, pageSize: number): Promise<Book[]> {
+    console.log('adentro de paginacion')
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    let books = await this.getBooks();
+    books = books.slice(startIndex, endIndex);
+
+    return books;
+  }
 }
