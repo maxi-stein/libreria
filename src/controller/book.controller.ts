@@ -13,7 +13,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateBookDto, GetBookDto } from 'src/dto/book.dto';
-import { BookService } from './book.service';
+import { BookService } from '../service/book.service';
 import { Response } from 'express';
 import * as moment from 'moment';
 import { ApiTags } from '@nestjs/swagger';
@@ -54,8 +54,7 @@ export class BookController {
   @Get()
   async getBooks(@Res() response: Response, @Query() query: GetBookDto) {
     let books;
-    if (query.pagination === 'true') {
-      //that comparison doesnt look good , i know.
+    if (query.pagination) {
       const page = query.page || 1; //page 1 if no page specified
       const pageSize = query.pageSize || 5; //pageSize 5 if no pageSize specified
       let category;
@@ -75,7 +74,7 @@ export class BookController {
   }
 
   @Get('/:id')
-  async getBook(@Param('id') bookId, @Res() response: Response) {
+  async getBook(@Param('id') bookId: string, @Res() response: Response) {
     const book = await this.bookService.getBook(bookId);
     if (!book) throw new NotFoundException('Book does not exists.');
     await book.populate('publisher'); //'publisher' is the name of the field
@@ -114,12 +113,10 @@ export class BookController {
 
     if (twoDigitYear.test(date)) {
       const formattedDate = moment(date, 'DD/MM/YY');
-      console.log('luego del primer formateo: ', formattedDate);
       return formattedDate.toISOString();
     }
     if (fourDigitYear.test(date)) {
       const formattedDate = moment(date, 'DD/MM/YYYY');
-      console.log('luego del primer formateo: ', formattedDate);
       return formattedDate.toISOString();
     } else {
       throw new BadRequestException(

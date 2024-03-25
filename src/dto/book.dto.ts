@@ -39,7 +39,7 @@ export class GetBookDto {
     enum: ['true', 'false'],
   })
   @IsOptional()
-  readonly pagination?: string;
+  readonly pagination?: boolean;
 
   @ApiProperty({
     description: 'Number of the page in case of pagination enabled',

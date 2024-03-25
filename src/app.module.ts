@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { BookModule } from './book/book.module';
-import { AuthorModule } from './author/author.module';
-import { PublisherModule } from './publisher/publisher.module';
+import { BookModule } from './module/book.module';
+import { AuthorModule } from './module/author.module';
+import { PublisherModule } from './module/publisher.module';
 import { DatabaseModule } from './database/database.module';
 
 @Module({

@@ -22,7 +22,6 @@ export class BookService {
       .find()
       .populate('publisher')
       .populate('authors');
-    console.log(categoryFilter);
     if (categoryFilter) {
       query.where('category').equals(categoryFilter);
     }

@@ -11,7 +11,7 @@ import {
   Post,
   BadRequestException,
 } from '@nestjs/common';
-import { AuthorService } from './author.service';
+import { AuthorService } from '../service/author.service';
 import { CreateAuthorDto } from 'src/dto/author.dto';
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';

@@ -10,7 +10,7 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
-import { PublisherService } from './publisher.service';
+import { PublisherService } from '../service/publisher.service';
 import { Response } from 'express';
 import { CreatePublisherDto } from 'src/dto/publisher.dto';
 import { ApiTags } from '@nestjs/swagger';

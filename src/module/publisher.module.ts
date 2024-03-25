@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PublisherController } from './publisher.controller';
-import { PublisherService } from './publisher.service';
+import { PublisherController } from '../controller/publisher.controller';
+import { PublisherService } from '../service/publisher.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PublisherSchema } from 'src/schemas/publisher.schema';
 
