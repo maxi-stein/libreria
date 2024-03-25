@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -7,6 +11,8 @@ import { CreateBookDto } from 'src/dto/book.dto';
 import { Book } from 'src/interfaces/book.interface';
 import { Author } from 'src/interfaces/author.interface';
 import { Publisher } from 'src/interfaces/publisher.interface';
+
+import * as moment from 'moment';
 
 @Injectable()
 export class BookService {
@@ -85,6 +91,7 @@ export class BookService {
       throw new NotFoundException('Publisher not found.');
     }
   }
+
   async getbooksPage(
     page: number,
     pageSize: number,
@@ -95,5 +102,25 @@ export class BookService {
     let books = await this.getBooks(categoryFilter);
     books = books.slice(startIndex, endIndex);
     return books;
+  }
+
+  getFormattedDate(date: string): string {
+    const twoDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{2}$/;
+    const fourDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{4}$/;
+
+    if (date) {
+      if (twoDigitYear.test(date)) {
+        const formattedDate = moment(date, 'DD/MM/YY');
+        return formattedDate.toISOString();
+      }
+      if (fourDigitYear.test(date)) {
+        const formattedDate = moment(date, 'DD/MM/YYYY');
+        return formattedDate.toISOString();
+      }
+    }
+
+    throw new BadRequestException(
+      'Invalid Date. Please use formats DD/MM/YYYY or DD/MM/YY or verify if the date is actually valid',
+    );
   }
 }

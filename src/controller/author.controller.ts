@@ -9,7 +9,6 @@ import {
   Body,
   Delete,
   Post,
-  BadRequestException,
 } from '@nestjs/common';
 import { AuthorService } from '../service/author.service';
 import { CreateAuthorDto } from 'src/dto/author.dto';
@@ -43,8 +42,10 @@ export class AuthorController {
     @Res() response: Response,
     @Body() createAuthorDto: CreateAuthorDto,
   ) {
-    if (!this.validateDni(createAuthorDto.dni)) {
-      throw new BadRequestException('DNI is not valid');
+    try {
+      this.authorService.validateDni(createAuthorDto.dni);
+    } catch (error) {
+      return error;
     }
     const author = await this.authorService.createAuthor(createAuthorDto);
     return response.status(HttpStatus.OK).json({
@@ -77,10 +78,5 @@ export class AuthorController {
       message: 'Author deleted successfuly',
       author,
     });
-  }
-
-  validateDni(dni: string): boolean {
-    const regex: RegExp = /^[1-9]{1}\d{7}$/;
-    return regex.test(dni);
   }
 }

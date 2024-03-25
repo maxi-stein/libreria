@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Author } from 'src/interfaces/author.interface';
@@ -40,5 +40,12 @@ export class AuthorService {
   async deleteAuthor(authorId: string): Promise<Author> {
     const author = await this.authorModel.findByIdAndDelete(authorId);
     return author;
+  }
+
+  validateDni(dni: string) {
+    const regex: RegExp = /^[1-9]{1}\d{7}$/;
+    if (!regex.test(dni)) {
+      throw new BadRequestException('DNI is not valid');
+    }
   }
 }

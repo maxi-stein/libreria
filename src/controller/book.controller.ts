@@ -9,13 +9,11 @@ import {
   Body,
   Param,
   NotFoundException,
-  BadRequestException,
   Query,
 } from '@nestjs/common';
 import { CreateBookDto, GetBookDto } from 'src/dto/book.dto';
 import { BookService } from '../service/book.service';
 import { Response } from 'express';
-import * as moment from 'moment';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('books')
@@ -29,25 +27,21 @@ export class BookController {
     @Body() createBookDto: CreateBookDto,
   ) {
     try {
-      try {
-        createBookDto.releaseDate = this.getFormattedDate(
-          createBookDto.releaseDate,
-        );
-      } catch (error) {
-        return response.status(HttpStatus.BAD_REQUEST).json({
-          error,
-        });
-      }
+      createBookDto.releaseDate = this.bookService.getFormattedDate(
+        createBookDto.releaseDate,
+      );
+    } catch (error) {
+      return response.json(error);
+    }
 
+    try {
       const book = await this.bookService.createBook(createBookDto);
       return response.status(HttpStatus.OK).json({
         message: 'Book created succesfuly',
         book,
       });
     } catch (error) {
-      return response.status(HttpStatus.BAD_REQUEST).json({
-        error,
-      });
+      return error;
     }
   }
 
@@ -105,23 +99,5 @@ export class BookController {
       message: 'Book deleted successfuly',
       book,
     });
-  }
-
-  getFormattedDate(date: string): string {
-    const twoDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{2}$/;
-    const fourDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{4}$/;
-
-    if (twoDigitYear.test(date)) {
-      const formattedDate = moment(date, 'DD/MM/YY');
-      return formattedDate.toISOString();
-    }
-    if (fourDigitYear.test(date)) {
-      const formattedDate = moment(date, 'DD/MM/YYYY');
-      return formattedDate.toISOString();
-    } else {
-      throw new BadRequestException(
-        'Invalid Date. Please use formats DD/MM/YYYY or DD/MM/YY or verify if the date is actually valid',
-      );
-    }
   }
 }
