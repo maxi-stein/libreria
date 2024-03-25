@@ -55,8 +55,12 @@ export class BookController {
     if (query.pagination === 'true') {
       //that comparison doesnt look good , i know.
       const page = query.page || 1; //page 1 if no page specified
-      const pageSize = query.pageSize || 5; //page 5 if no page specified
-      books = await this.bookService.getbooksPage(page, pageSize);
+      const pageSize = query.pageSize || 5; //pageSize 5 if no pageSize specified
+      let category;
+      if (query.categoryFilter) {
+        category = query.categoryFilter;
+      }
+      books = await this.bookService.getbooksPage(page, pageSize, category);
       response.status(HttpStatus.OK).json({
         books,
       });

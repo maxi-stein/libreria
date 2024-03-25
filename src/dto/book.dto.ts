@@ -9,4 +9,5 @@ export class CreateBookDto {
   readonly pagination?: string;
   readonly page?: number;
   readonly pageSize?: number;
+  readonly categoryFilter?: string;
 }

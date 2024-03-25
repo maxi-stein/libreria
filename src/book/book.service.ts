@@ -17,11 +17,16 @@ export class BookService {
     @InjectModel('Publisher') private readonly publisherModel: Model<Publisher>,
   ) {}
 
-  async getBooks(): Promise<Book[]> {
-    const books = await this.bookModel
+  async getBooks(categoryFilter?: string): Promise<Book[]> {
+    const query = this.bookModel
       .find()
       .populate('publisher')
       .populate('authors');
+    console.log(categoryFilter);
+    if (categoryFilter) {
+      query.where('category').equals(categoryFilter);
+    }
+    const books = await query.exec();
     return books;
   }
 
@@ -81,14 +86,15 @@ export class BookService {
       throw new NotFoundException('Publisher not found.');
     }
   }
-  async getbooksPage(page: number, pageSize: number): Promise<Book[]> {
-    console.log('adentro de paginacion')
+  async getbooksPage(
+    page: number,
+    pageSize: number,
+    categoryFilter?: string,
+  ): Promise<Book[]> {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-
-    let books = await this.getBooks();
+    let books = await this.getBooks(categoryFilter);
     books = books.slice(startIndex, endIndex);
-
     return books;
   }
 }
