@@ -13,7 +13,9 @@ import {
 import { PublisherService } from './publisher.service';
 import { Response } from 'express';
 import { CreatePublisherDto } from 'src/dto/publisher.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('publisher')
 @Controller('publishers')
 export class PublisherController {
   constructor(private publisherService: PublisherService) {}

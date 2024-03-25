@@ -14,7 +14,9 @@ import {
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from 'src/dto/author.dto';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('authors')
 @Controller('authors')
 export class AuthorController {
   constructor(private authorService: AuthorService) {}

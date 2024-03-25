@@ -16,7 +16,9 @@ import { CreateBookDto } from 'src/dto/book.dto';
 import { BookService } from './book.service';
 import { Response } from 'express';
 import * as moment from 'moment';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('books')
 @Controller('books')
 export class BookController {
   constructor(private bookService: BookService) {}
