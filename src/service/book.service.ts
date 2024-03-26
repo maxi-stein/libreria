@@ -6,7 +6,7 @@ import {
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { CreateBookDto } from 'src/dto/book.dto';
+import { CreateBookDto } from 'src/dto/create-book.dto';
 
 import { Book } from 'src/interfaces/book.interface';
 import { Author } from 'src/interfaces/author.interface';

@@ -11,7 +11,8 @@ import {
   NotFoundException,
   Query,
 } from '@nestjs/common';
-import { CreateBookDto, GetBookDto } from 'src/dto/book.dto';
+import { CreateBookDto } from 'src/dto/create-book.dto';
+import { GetBookDto } from 'src/dto/get-book.dto';
 import { BookService } from '../service/book.service';
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
@@ -20,22 +21,6 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('books')
 export class BookController {
   constructor(private bookService: BookService) {}
-
-  @Post()
-  async createBook(
-    @Res() response: Response,
-    @Body() createBookDto: CreateBookDto,
-  ) {
-    try {
-      const book = await this.bookService.createBook(createBookDto);
-      return response.status(HttpStatus.OK).json({
-        message: 'Book created succesfuly',
-        book,
-      });
-    } catch (error) {
-      return error;
-    }
-  }
 
   @Get()
   async getBooks(@Res() response: Response, @Query() query: GetBookDto) {
@@ -68,6 +53,22 @@ export class BookController {
     response.status(HttpStatus.OK).json({
       book,
     });
+  }
+
+  @Post()
+  async createBook(
+    @Res() response: Response,
+    @Body() createBookDto: CreateBookDto,
+  ) {
+    try {
+      const book = await this.bookService.createBook(createBookDto);
+      return response.status(HttpStatus.OK).json({
+        message: 'Book created succesfuly',
+        book,
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   @Put('/:id')
