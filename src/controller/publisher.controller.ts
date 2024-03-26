@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpStatus,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -33,11 +32,14 @@ export class PublisherController {
     @Param('id') pbulisherId: string,
     @Res() response: Response,
   ) {
-    const publisher = await this.publisherService.getPublisher(pbulisherId);
-    if (!publisher) throw new NotFoundException('Publisher does not exists.');
-    response.status(HttpStatus.OK).json({
-      publisher,
-    });
+    try {
+      const publisher = await this.publisherService.getPublisher(pbulisherId);
+      response.status(HttpStatus.OK).json({
+        publisher,
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   @Post()
@@ -46,17 +48,15 @@ export class PublisherController {
     @Body() createPublisherDto: CreatePublisherDto,
   ) {
     try {
-      this.publisherService.validateCuit(createPublisherDto.cuit);
+      const publisher =
+        await this.publisherService.createPublisher(createPublisherDto);
+      return response.status(HttpStatus.OK).json({
+        message: 'Publisher created succesfuly',
+        publisher,
+      });
     } catch (error) {
       return error;
     }
-
-    const publisher =
-      await this.publisherService.createPublisher(createPublisherDto);
-    return response.status(HttpStatus.OK).json({
-      message: 'Publisher created succesfuly',
-      publisher,
-    });
   }
 
   @Put('/:id')
@@ -65,23 +65,29 @@ export class PublisherController {
     @Param('id') pbulisherId,
     @Body() createPublisherDto: CreatePublisherDto,
   ) {
-    const publisher = await this.publisherService.updatePublisher(
-      pbulisherId,
-      createPublisherDto,
-    );
-    if (!publisher) throw new NotFoundException('Publisher does not exists');
-    response.status(HttpStatus.OK).json({
-      publisher,
-    });
+    try {
+      const publisher = await this.publisherService.updatePublisher(
+        pbulisherId,
+        createPublisherDto,
+      );
+      response.status(HttpStatus.OK).json({
+        publisher,
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   @Delete('/:id')
   async deletePublisher(@Param('id') pbulisherId, @Res() response: Response) {
-    const publisher = await this.publisherService.deletePublisher(pbulisherId);
-    if (!publisher) throw new NotFoundException('Publisher does not exists.');
-    response.status(HttpStatus.OK).json({
-      message: 'Publisher deleted successfuly',
-      publisher,
-    });
+    try {
+      const publisher = await this.publisherService.deletePublisher(pbulisherId);
+      response.status(HttpStatus.OK).json({
+        message: 'Publisher deleted successfuly',
+        publisher,
+      });
+    } catch (error) {
+      return error;
+    }
   }
 }

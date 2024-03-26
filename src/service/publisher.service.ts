@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreatePublisherDto } from 'src/dto/publisher.dto';
@@ -17,6 +17,7 @@ export class PublisherService {
 
   async getPublisher(publisherId: string): Promise<Publisher> {
     const publisher = await this.publisherModel.findById(publisherId);
+    if (!publisher) throw new NotFoundException('Publisher does not exists.');
     return publisher;
   }
 
@@ -24,7 +25,12 @@ export class PublisherService {
     createPublisher: CreatePublisherDto,
   ): Promise<Publisher> {
     const publisher = await this.publisherModel.create(createPublisher);
-    return publisher;
+    try {
+      this.validateCuit(publisher.cuit);
+      return publisher;
+    } catch (error) {
+      return error;
+    }
   }
 
   async updatePublisher(
@@ -36,11 +42,13 @@ export class PublisherService {
       createPublisher,
       { new: true },
     );
+    if (!publisher) throw new NotFoundException('Publisher does not exists');
     return publisher;
   }
 
   async deletePublisher(publisherId: string): Promise<Publisher> {
     const publisher = await this.publisherModel.findByIdAndDelete(publisherId);
+    if (!publisher) throw new NotFoundException('Publisher does not exists.');
     return publisher;
   }
 
