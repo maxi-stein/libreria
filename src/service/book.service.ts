@@ -20,15 +20,41 @@ export class BookService {
     @InjectModel('Publisher') private readonly publisherModel: Model<Publisher>,
   ) {}
 
-  async getBooks(categoryFilter?: string): Promise<Book[]> {
+  async getBooks(
+    categoryFilter?: string,
+    pagination?: boolean,
+    page?: number,
+    pageSize?: number,
+  ): Promise<Book[]> {
     const query = this.bookModel
       .find()
       .populate('publisher')
-      .populate('authors');
+      .populate('authors'); //populating authors and publishers
     if (categoryFilter) {
-      query.where('category').equals(categoryFilter);
+      query.where('category').equals(categoryFilter); //category filter is specified
     }
-    const books = await query.exec();
+
+    let books = await query.exec();
+
+    if (pagination) {
+      if (page && pageSize) {
+        //pagination is allowed only if page number and page size is specified
+        if (page <= 0 || pageSize <= 0) {
+          throw new BadRequestException(
+            'page and pageSize must be greater than 0',
+          );
+        }
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        books = books.slice(startIndex, endIndex);
+        if (books.length == 0) {
+          throw new BadRequestException(
+            'No books found for page ' + page + ' with size of ' + pageSize,
+          );
+        }
+      }
+    }
+
     return books;
   }
 
@@ -37,6 +63,7 @@ export class BookService {
       .findById(bookId)
       .populate('publisher')
       .populate('authors');
+    if (!book) throw new NotFoundException('Book does not exists.');
     return book;
   }
 
@@ -52,6 +79,7 @@ export class BookService {
 
   async deleteBook(bookId: string): Promise<Book> {
     const book = await this.bookModel.findByIdAndDelete(bookId);
+    if (!book) throw new NotFoundException('Book does not exists.');
     return book;
   }
 
@@ -60,8 +88,9 @@ export class BookService {
     createBookDto: CreateBookDto,
   ): Promise<Book> {
     const book = await this.bookModel.findByIdAndUpdate(bookId, createBookDto, {
-      new: true, //new: true makes the function return the new updated book
+      new: true, //'new: true' makes the function return the new updated book instead of the old one.
     });
+    if (!book) throw new NotFoundException('Book does not exists');
     return book;
   }
 
@@ -90,18 +119,6 @@ export class BookService {
     if (publisherExists === null) {
       throw new NotFoundException('Publisher not found.');
     }
-  }
-
-  async getbooksPage(
-    page: number,
-    pageSize: number,
-    categoryFilter?: string,
-  ): Promise<Book[]> {
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    let books = await this.getBooks(categoryFilter);
-    books = books.slice(startIndex, endIndex);
-    return books;
   }
 
   getFormattedDate(date: string): string {
