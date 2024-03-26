@@ -3,22 +3,6 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript created for a simple API RESTFUL Library.
 
-Once installed, please run the application with:
-
-```bash
-$ npm run start
-```
-Finally, you can access this API throw the following URL:
-
-```bash
-http://localhost:3001
-```
-
-Additionally, swagger documentation can be found at:
-```bash
-http://localhost:3001/doc
-```
-
 ## Installation
 
 ```bash
@@ -36,6 +20,17 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+```
+
+Finally, you can access this API through the following URL:
+
+```bash
+http://localhost:3001
+```
+
+Additionally, swagger documentation can be found at:
+```bash
+http://localhost:3001/doc
 ```
 
 ## Test
