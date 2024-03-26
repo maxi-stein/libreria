@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Author } from 'src/interfaces/author.interface';
@@ -17,10 +17,12 @@ export class AuthorService {
 
   async getAuthor(authorId: string): Promise<Author> {
     const author = await this.authorModel.findById(authorId);
+    if (!author) throw new NotFoundException('Author does not exists.');
     return author;
   }
 
   async createAuthor(createAuthorDto: CreateAuthorDto): Promise<Author> {
+    this.validateDni(createAuthorDto.dni);
     const author = await this.authorModel.create(createAuthorDto);
     return author;
   }
@@ -34,11 +36,13 @@ export class AuthorService {
       createAuthorDto,
       { new: true },
     );
+    if (!author) throw new NotFoundException('Author does not exists');
     return author;
   }
 
   async deleteAuthor(authorId: string): Promise<Author> {
     const author = await this.authorModel.findByIdAndDelete(authorId);
+    if (!author) throw new NotFoundException('Author does not exists.');
     return author;
   }
 

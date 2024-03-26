@@ -27,14 +27,6 @@ export class BookController {
     @Body() createBookDto: CreateBookDto,
   ) {
     try {
-      createBookDto.releaseDate = this.bookService.getFormattedDate(
-        createBookDto.releaseDate,
-      );
-    } catch (error) {
-      return response.json(error);
-    }
-
-    try {
       const book = await this.bookService.createBook(createBookDto);
       return response.status(HttpStatus.OK).json({
         message: 'Book created succesfuly',

@@ -3,7 +3,6 @@ import {
   HttpStatus,
   Res,
   Get,
-  NotFoundException,
   Put,
   Param,
   Body,
@@ -30,8 +29,14 @@ export class AuthorController {
 
   @Get('/:id')
   async getAuthor(@Param('id') authorId, @Res() response: Response) {
-    const author = await this.authorService.getAuthor(authorId);
-    if (!author) throw new NotFoundException('Author does not exists.');
+    let author;
+    try {
+      author = await this.authorService.getAuthor(authorId);
+    } catch (error) {
+      return response.status(error.status).json({
+        error,
+      });
+    }
     response.status(HttpStatus.OK).json({
       author,
     });
@@ -42,12 +47,14 @@ export class AuthorController {
     @Res() response: Response,
     @Body() createAuthorDto: CreateAuthorDto,
   ) {
+    let author;
     try {
-      this.authorService.validateDni(createAuthorDto.dni);
+      author = await this.authorService.createAuthor(createAuthorDto);
     } catch (error) {
-      return error;
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        error,
+      });
     }
-    const author = await this.authorService.createAuthor(createAuthorDto);
     return response.status(HttpStatus.OK).json({
       message: 'Author created succesfuly',
       author,
@@ -60,11 +67,14 @@ export class AuthorController {
     @Param('id') authorId,
     @Body() createAuthorDto: CreateAuthorDto,
   ) {
-    const author = await this.authorService.updateAuthor(
-      authorId,
-      createAuthorDto,
-    );
-    if (!author) throw new NotFoundException('Author does not exists');
+    let author;
+    try {
+      author = await this.authorService.updateAuthor(authorId, createAuthorDto);
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        error,
+      });
+    }
     response.status(HttpStatus.OK).json({
       author,
     });
@@ -72,8 +82,15 @@ export class AuthorController {
 
   @Delete('/:id')
   async deleteAuthor(@Param('id') authorId, @Res() response: Response) {
-    const author = await this.authorService.deleteAuthor(authorId);
-    if (!author) throw new NotFoundException('Author does not exists.');
+    let author;
+    try {
+      author = await this.authorService.deleteAuthor(authorId);
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        error,
+      });
+    }
+
     response.status(HttpStatus.OK).json({
       message: 'Author deleted successfuly',
       author,

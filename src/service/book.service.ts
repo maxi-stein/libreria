@@ -45,6 +45,9 @@ export class BookService {
 
   async createBook(createBookDto: CreateBookDto): Promise<Book> {
     await this.validateBook(createBookDto);
+    createBookDto.releaseDate = this.getFormattedDate(
+      createBookDto.releaseDate,
+    );
     const book = new this.bookModel(createBookDto);
     await book.save();
     return book;
