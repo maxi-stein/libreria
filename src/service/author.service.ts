@@ -1,12 +1,9 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Author } from 'src/interfaces/author.interface';
 import { CreateAuthorDto } from 'src/dto/author.dto';
+import { validateDni } from 'src/utils/utils';
 
 @Injectable()
 export class AuthorService {
@@ -26,7 +23,11 @@ export class AuthorService {
   }
 
   async createAuthor(createAuthorDto: CreateAuthorDto): Promise<Author> {
-    this.validateDni(createAuthorDto.dni);
+    try {
+      validateDni(createAuthorDto.dni);
+    } catch (error) {
+      throw error;
+    }
     const author = await this.authorModel.create(createAuthorDto);
     return author;
   }
@@ -48,12 +49,5 @@ export class AuthorService {
     const author = await this.authorModel.findByIdAndDelete(authorId);
     if (!author) throw new NotFoundException('Author does not exists.');
     return author;
-  }
-
-  validateDni(dni: string) {
-    const regex: RegExp = /^[1-9]{1}\d{7}$/;
-    if (!regex.test(dni)) {
-      throw new BadRequestException('DNI is not valid');
-    }
   }
 }

@@ -9,7 +9,7 @@ import { CreateBookDto } from 'src/dto/create-book.dto';
 import { Book } from 'src/interfaces/book.interface';
 import { Author } from 'src/interfaces/author.interface';
 import { Publisher } from 'src/interfaces/publisher.interface';
-import * as moment from 'moment';
+import { getFormattedDate, validateBook } from 'src/utils/utils';
 
 @Injectable()
 export class BookService {
@@ -68,10 +68,12 @@ export class BookService {
   }
 
   async createBook(createBookDto: CreateBookDto): Promise<Book> {
-    await this.validateBook(createBookDto);
-    createBookDto.releaseDate = this.getFormattedDate(
-      createBookDto.releaseDate,
-    );
+    try {
+      await validateBook(createBookDto, this.authorModel, this.publisherModel);
+    } catch (error) {
+      throw error;
+    }
+    createBookDto.releaseDate = getFormattedDate(createBookDto.releaseDate);
     const book = new this.bookModel(createBookDto);
     await book.save();
     return book;
@@ -92,52 +94,5 @@ export class BookService {
     });
     if (!book) throw new NotFoundException('Book does not exists');
     return book;
-  }
-
-  //checks if author and publisher exist in the database
-  async validateBook(createBookDto: CreateBookDto) {
-    // Checking if every authors exist
-    const authorPromises = createBookDto.authors.map((authorId) => {
-      return this.authorModel.exists({ _id: authorId });
-    });
-    const authorExistsArray = await Promise.all(authorPromises);
-
-    // iterating every result of the promise to see if at least one id was not found
-    const allAuthorsExist = authorExistsArray.every(
-      (authorExists) => authorExists, //check if every result is true
-    );
-
-    //checks if the publisher exists
-    const publisherExists = await this.publisherModel.exists({
-      _id: createBookDto.publisher,
-    });
-
-    if (!allAuthorsExist) {
-      throw new NotFoundException('Author not found.');
-    }
-
-    if (publisherExists === null) {
-      throw new NotFoundException('Publisher not found.');
-    }
-  }
-
-  getFormattedDate(date: string): string {
-    const twoDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{2}$/;
-    const fourDigitYear = /^[0-3][0-9]\/[0-1][0-9]\/\d{4}$/;
-
-    if (date) {
-      if (twoDigitYear.test(date)) {
-        const formattedDate = moment(date, 'DD/MM/YY');
-        return formattedDate.toISOString();
-      }
-      if (fourDigitYear.test(date)) {
-        const formattedDate = moment(date, 'DD/MM/YYYY');
-        return formattedDate.toISOString();
-      }
-    }
-
-    throw new BadRequestException(
-      'Invalid Date. Please use formats DD/MM/YYYY or DD/MM/YY or verify if the date is actually valid',
-    );
   }
 }

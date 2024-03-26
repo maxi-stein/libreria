@@ -47,16 +47,19 @@ export class PublisherController {
     @Res() response: Response,
     @Body() createPublisherDto: CreatePublisherDto,
   ) {
+    let publisher;
     try {
-      const publisher =
+      publisher =
         await this.publisherService.createPublisher(createPublisherDto);
-      return response.status(HttpStatus.OK).json({
-        message: 'Publisher created succesfuly',
-        publisher,
-      });
     } catch (error) {
-      return error;
+      return response
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ error: error.message });
     }
+    return response.status(HttpStatus.OK).json({
+      message: 'Publisher created succesfuly',
+      publisher,
+    });
   }
 
   @Put('/:id')
@@ -81,7 +84,8 @@ export class PublisherController {
   @Delete('/:id')
   async deletePublisher(@Param('id') pbulisherId, @Res() response: Response) {
     try {
-      const publisher = await this.publisherService.deletePublisher(pbulisherId);
+      const publisher =
+        await this.publisherService.deletePublisher(pbulisherId);
       response.status(HttpStatus.OK).json({
         message: 'Publisher deleted successfuly',
         publisher,

@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreatePublisherDto } from 'src/dto/publisher.dto';
 import { Publisher } from 'src/interfaces/publisher.interface';
+import { validateCuit } from 'src/utils/utils';
 
 @Injectable()
 export class PublisherService {
@@ -24,13 +25,13 @@ export class PublisherService {
   async createPublisher(
     createPublisher: CreatePublisherDto,
   ): Promise<Publisher> {
-    const publisher = await this.publisherModel.create(createPublisher);
     try {
-      this.validateCuit(publisher.cuit);
-      return publisher;
+      validateCuit(createPublisher.cuit);
     } catch (error) {
-      return error;
+      throw error;
     }
+    const publisher = await this.publisherModel.create(createPublisher);
+    return publisher;
   }
 
   async updatePublisher(
@@ -50,12 +51,5 @@ export class PublisherService {
     const publisher = await this.publisherModel.findByIdAndDelete(publisherId);
     if (!publisher) throw new NotFoundException('Publisher does not exists.');
     return publisher;
-  }
-
-  validateCuit(cuit: string): void {
-    const regex: RegExp = /^[1-9]{2}-\d{8}-\d{1}$/;
-    if (!regex.test(cuit)) {
-      throw new BadRequestException('CUIT is not valid');
-    }
   }
 }

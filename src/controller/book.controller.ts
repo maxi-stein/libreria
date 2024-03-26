@@ -59,15 +59,19 @@ export class BookController {
     @Res() response: Response,
     @Body() createBookDto: CreateBookDto,
   ) {
+    let book;
     try {
-      const book = await this.bookService.createBook(createBookDto);
-      return response.status(HttpStatus.OK).json({
-        message: 'Book created succesfuly',
-        book,
-      });
+      book = await this.bookService.createBook(createBookDto);
     } catch (error) {
-      return error;
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Validation error',
+        error: error.message,
+      });
     }
+    return response.status(HttpStatus.OK).json({
+      message: 'Book created succesfuly',
+      book,
+    });
   }
 
   @Put('/:id')
