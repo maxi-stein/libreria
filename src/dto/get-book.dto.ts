@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class GetBookDto {
@@ -6,6 +6,7 @@ export class GetBookDto {
     description: "Book's pagination toggle. Possible values:true or false",
     enum: ['true', 'false'],
   })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
   readonly pagination?: boolean;

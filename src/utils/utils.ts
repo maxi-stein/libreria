@@ -47,14 +47,15 @@ export async function validateBook(
   const allAuthorsExist = authorExistsArray.every(
     (authorExists) => authorExists, //check if every result is true
   );
-  //checks if the publisher exists
-  const publisherExists = await publisherModel.exists({
-    _id: createBookDto.publisher,
-  });
 
   if (!allAuthorsExist) {
     throw new NotFoundException('At least one author was not found.');
   }
+
+  //checks if the publisher exists
+  const publisherExists = await publisherModel.exists({
+    _id: createBookDto.publisher,
+  });
 
   if (publisherExists == null) {
     throw new NotFoundException('Publisher not found.');
