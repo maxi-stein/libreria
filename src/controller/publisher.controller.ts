@@ -65,12 +65,12 @@ export class PublisherController {
   @Put('/:id')
   async updatePublisher(
     @Res() response: Response,
-    @Param('id') pbulisherId,
+    @Param('id') publisherId,
     @Body() createPublisherDto: CreatePublisherDto,
   ) {
     try {
       const publisher = await this.publisherService.updatePublisher(
-        pbulisherId,
+        publisherId,
         createPublisherDto,
       );
       response.status(HttpStatus.OK).json({
@@ -82,10 +82,10 @@ export class PublisherController {
   }
 
   @Delete('/:id')
-  async deletePublisher(@Param('id') pbulisherId, @Res() response: Response) {
+  async deletePublisher(@Param('id') publisherId, @Res() response: Response) {
     try {
       const publisher =
-        await this.publisherService.deletePublisher(pbulisherId);
+        await this.publisherService.deletePublisher(publisherId);
       response.status(HttpStatus.OK).json({
         message: 'Publisher deleted successfuly',
         publisher,
