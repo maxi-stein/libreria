@@ -1,0 +1,38 @@
+[{
+  "_id": {
+    "$oid": "67227eca91adfdff64aaca2e"
+  },
+  "authors": [
+    {
+      "$oid": "67227b6a91adfdff64aaca23"
+    }
+  ],
+  "publisher": {
+    "$oid": "67227983f9f65c53d85d1a41"
+  },
+  "title": "Small Concrete Shoes",
+  "category": "iure",
+  "price": 337.85,
+  "releaseDate": "1999-01-01T03:00:00.000Z",
+  "description": "Alter defungo quae aurum suadeo suffoco cupiditas defungo dolor solio. Curo accusamus barba virga theologus vinculum demens accommodo. Aeneus canis dicta reprehenderit.",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727d93504b93032358f9900"
+  },
+  "authors": [
+    {
+      "$oid": "67227b7491adfdff64aaca25"
+    }
+  ],
+  "publisher": {
+    "$oid": "6727d90404b93032358f98f7"
+  },
+  "title": "Incredible Wooden Towels",
+  "category": "aptus",
+  "price": 249.39,
+  "releaseDate": "2012-01-23T03:00:00.000Z",
+  "description": "Tero tum subito demoror suspendo conqueror. Tonsor sopor vulpes dolor sodalitas depulso tergiversatio. Vitae delicate crudelis vilicus vicinus.",
+  "__v": 0
+}]

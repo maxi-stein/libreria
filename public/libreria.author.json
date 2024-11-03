@@ -1,0 +1,30 @@
+[{
+  "_id": {
+    "$oid": "67227b6a91adfdff64aaca23"
+  },
+  "name": "Shaylee",
+  "surname": "Lebsack",
+  "dni": "12345678",
+  "nationality": "Germany",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67227b7491adfdff64aaca25"
+  },
+  "name": "Everette",
+  "surname": "Hessel",
+  "dni": "12345679",
+  "nationality": "Bonaire, Sint Eustatius and Saba",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "672398b89c773b46f3d94587"
+  },
+  "name": "Roosevelt",
+  "surname": "Smitham",
+  "dni": "12345612",
+  "nationality": "Monaco",
+  "__v": 0
+}]

@@ -1,0 +1,27 @@
+[{
+  "_id": {
+    "$oid": "67227983f9f65c53d85d1a41"
+  },
+  "name": "Waelchi, Halvorson and Goyette",
+  "address": "8506 Watsica Place",
+  "cuit": "12-23345678-0",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67237aae9c773b46f3d943d9"
+  },
+  "name": "Kessler Inc",
+  "address": "2500 Rosemary Mall",
+  "cuit": "92-73385678-3",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727d90404b93032358f98f7"
+  },
+  "name": "Hane Group",
+  "address": "192 Alverta Land",
+  "cuit": "22-74387688-0",
+  "__v": 0
+}]
